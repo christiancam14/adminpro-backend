@@ -8,6 +8,7 @@ const {
   crearUsuario,
   actualizarUsuario,
   borrarUsuario,
+  crearUsuariosBulk,
 } = require("../controllers/usuarios");
 const { validarCampos } = require("../middlewares/validar-campos");
 const { validarJWT } = require("../middlewares/validar-jwt");

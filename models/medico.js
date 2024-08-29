@@ -18,8 +18,7 @@ const MedicoSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Hospital",
     },
-  },
-  { collection: "medicos" }
+  }
 );
 
 MedicoSchema.method("toJSON", function () {

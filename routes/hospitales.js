@@ -16,13 +16,21 @@ const router = Router();
 
 router.get("/", [], getHospitales);
 
-router.post("/", [
-  validarJWT,
-  check('nombre', 'El nombre del hospital es necesario').not().isEmpty(),
-  validarCampos
-], crearHospitales);
+router.post(
+  "/",
+  [
+    validarJWT,
+    check("nombre", "El nombre del hospital es necesario").not().isEmpty(),
+    validarCampos,
+  ],
+  crearHospitales
+);
 
-router.put("/:id", [], actualizarHospitales);
+router.put(
+  "/:id",
+  [check("nombre", "El nombre del hospital es necesario").not().isEmpty()],
+  actualizarHospitales
+);
 
 router.delete("/:id", [], borrarHospitales);
 

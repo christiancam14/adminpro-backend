@@ -9,12 +9,6 @@ const getTodo = async (req, res) => {
 
   const regexp = new RegExp(busqueda, "i");
 
-  /*
-  const usuario = await Usuario.find({ nombre: regexp });
-  const medico = await Medico.find({ nombre: regexp });
-  const hospital = await Hospital.find({ nombre: regexp });
-  */
-
   const [usuario, medico, hospital] = await Promise.all([
     Usuario.find({ nombre: regexp }),
     Medico.find({ nombre: regexp }),
@@ -36,38 +30,42 @@ const getDocumentosColeccion = async (req, res) => {
   const regexp = new RegExp(busqueda, "i");
   let data = [];
 
-  switch (tabla) {
-    case "medicos":
-      data = await Medico.find({ nombre: regexp })
-        .populate("usuario", "nombre img")
-        .populate("hospital", "nombre img");
-      break;
+  try {
+    switch (tabla) {
+      case "medicos":
+        data = await Medico.find({ nombre: regexp })
+          .populate("usuario", "nombre img")
+          .populate("hospital", "nombre img");
+        break;
 
-    case "hospitales":
-      data = await Hospital.find({ nombre: regexp }).populate(
-        "usuario",
-        "nombre img"
-      );
-      break;
+      case "hospitales":
+        data = await Hospital.find({ nombre: regexp }).populate(
+          "usuario",
+          "nombre img"
+        );
+        break;
 
-    case "usuarios":
-      data = await Usuario.find({ nombre: regexp });
-      res.json({
-        ok: true,
-        resultados: data,
-      });
-      break;
+      case "usuarios":
+        data = await Usuario.find({ nombre: regexp });
+        break;
 
-    default:
-      return res.status(400).json({
-        ok: false,
-        msg: "La tabla debe ser usuarios/medicos/hospitales",
-      });
+      default:
+        return res.status(400).json({
+          ok: false,
+          msg: "La tabla debe ser usuarios/medicos/hospitales",
+        });
+    }
+    res.json({
+      ok: true,
+      resultados: data,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error inesperado, por favor contacte al administrador",
+    });
   }
-  res.json({
-    ok: true,
-    resultados: data,
-  });
 };
 
 module.exports = {

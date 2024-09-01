@@ -23,21 +23,16 @@ const crearHospitales = async (req, res = response) => {
   try {
     await hospitalDB.save();
 
-    res.json({
+    return res.json({
       ok: true,
       hospital: hospitalDB,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       ok: true,
       msg: "Hable con el administradors",
     });
   }
-
-  res.json({
-    ok: true,
-    msg: "crearHospitales",
-  });
 };
 
 const actualizarHospitales = async (req, res = response) => {
@@ -65,13 +60,13 @@ const actualizarHospitales = async (req, res = response) => {
       { new: true }
     );
 
-    res.json({
+    return res.json({
       ok: true,
       hospital: hospitalActualizado,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       ok: false,
       msg: "Error inesperado... revisar logs",
     });
@@ -93,13 +88,13 @@ const borrarHospitales = async (req, res = response) => {
 
     await Hospital.findByIdAndDelete(uid);
 
-    res.json({
+    return res.json({
       ok: true,
       msg: "Hospital eliminado",
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       ok: false,
       msg: "Error inesperado... revisar logs",
     });

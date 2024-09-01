@@ -5,9 +5,6 @@ const { generarJWT } = require("../helpers/jwt");
 
 const getUsuarios = async (req, res) => {
   const desde = Number(req.query.desde) || 0;
-
-  console.log(desde);
-
   /*
   const usuario = await Usuario.find({}, "nombre email role google")
     .skip(desde)
@@ -17,7 +14,7 @@ const getUsuarios = async (req, res) => {
   */
 
   const [usuario, total] = await Promise.all([
-    Usuario.find({}, "nombre email role google").skip(desde).limit(5),
+    Usuario.find({}, "nombre email img role google").skip(desde).limit(5),
 
     Usuario.countDocuments(),
   ]);
@@ -38,7 +35,7 @@ const crearUsuario = async (req, res = response) => {
     if (existeEmail) {
       return res.status(400).json({
         ok: false,
-        mensaje: "El correo ya está registrado",
+        msg: "El correo ya está registrado",
       });
     }
 
@@ -98,7 +95,14 @@ const actualizarUsuario = async (req, res = response) => {
       }
     }
 
-    campos.email = email;
+    if (!usuarioDB.google) {
+      campos.email = email;
+    } else if (usuarioDB.email !== email) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Usuario de google no pueden cambiar su correo",
+      });
+    }
 
     const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {
       new: true,

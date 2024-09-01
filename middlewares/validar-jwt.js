@@ -19,6 +19,13 @@ const validarJWT = (req, res = response, next) => {
 
     next();
   } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        ok: false,
+        msg: "Token ha expirado, por favor inicie sesión nuevamente",
+      });
+    }
+
     console.log(error);
     return res.status(400).json({
       ok: false,

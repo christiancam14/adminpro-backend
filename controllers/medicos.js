@@ -15,10 +15,19 @@ const getMedicos = async (req, res = response) => {
 const getMedicoById = async (req, res = response) => {
   const id = req.params.id;
 
+  console.log(id);
+
   try {
     const medicoDB = await Medico.findById(id)
       .populate("usuario", "nombre img")
       .populate("hospital", "nombre");
+
+    if (!medicoDB) {
+      res.status(400).json({
+        ok: false,
+        msg: "Medico no encontrado",
+      });
+    }
 
     res.json({
       ok: true,
@@ -27,7 +36,7 @@ const getMedicoById = async (req, res = response) => {
   } catch (error) {
     console.log(error);
     res.status(400).json({
-      ok: true,
+      ok: false,
       msg: "Hable con el administrador",
     });
   }
@@ -60,10 +69,11 @@ const actualizarMedicos = async (req, res = response) => {
   const uid = req.uid;
 
   try {
+    console.log(id);
     const medico = await Medico.findById(id);
 
     if (!medico) {
-      res.status(404).json({
+      return res.status(404).json({
         ok: false,
         msg: "Médico no encontrado por id",
       });
@@ -74,24 +84,27 @@ const actualizarMedicos = async (req, res = response) => {
       usuario: uid,
     };
 
+    console.log(id);
+
     const medicoActualizado = await Medico.findByIdAndUpdate(
       id,
       cambiosMedico,
       { new: true }
     );
 
-    res.json({
+    return res.json({
       ok: true,
       medico: medicoActualizado,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
-      ok: true,
+    return res.status(500).json({
+      ok: false,
       msg: "Hable con el administrador",
     });
   }
 };
+
 const borrarMedicos = async (req, res = response) => {
   const id = req.params.id;
 
@@ -114,7 +127,7 @@ const borrarMedicos = async (req, res = response) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      ok: true,
+      ok: false,
       msg: "Hable con el administrador",
     });
   }

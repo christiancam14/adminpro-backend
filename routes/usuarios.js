@@ -11,7 +11,7 @@ const {
   crearUsuariosBulk,
 } = require("../controllers/usuarios");
 const { validarCampos } = require("../middlewares/validar-campos");
-const { validarJWT, validarADMIN_ROLE_o_MismoUsuario } = require("../middlewares/validar-jwt");
+const { validarJWT, validarADMIN_ROLE_o_MismoUsuario, validarADMIN_ROLE } = require("../middlewares/validar-jwt");
 
 const router = Router();
 
